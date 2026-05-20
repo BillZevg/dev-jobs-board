@@ -1,7 +1,29 @@
 import express from "express";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
+const JWT_SECRET = "devjobs_secret_key_123";
 const app = express();
+const PORT = 3001;
+
+const authenticate = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 
 app.use(cors());
 app.use(express.json());
@@ -64,20 +86,21 @@ const jobs = [
   },
 ];
 
+const users = [];
+
 app.get("/api/jobs", (req, res) => {
   res.json(jobs);
 });
 
 app.get("/api/jobs/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  const job = jobs.find((j) => j.id === parseInt(id));
-  if (!job) {
-    return res.status(404).json({ message: "Job not found" });
-  }
+  const job = jobs.find((j) => j.id === id);
+
+  if (!job) return res.status(404).json({ message: "Job not found" });
   res.json(job);
 });
 
-app.post("/api/jobs", (req, res) => {
+app.post("/api/jobs", authenticate, (req, res) => {
   const newJob = req.body;
   const id = jobs[jobs.length - 1].id + 1;
   newJob.id = id;
@@ -85,16 +108,41 @@ app.post("/api/jobs", (req, res) => {
   res.status(201).json(newJob);
 });
 
+app.post("/api/auth/register", async (req, res) => {
+  const { email, password } = req.body;
+
+  const existing = users.find((u) => u.email === email);
+  if (existing) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = { id: users.length + 1, email, password: hashedPassword };
+  users.push(newUser);
+  res.status(201).json({ message: "User created" });
+});
+
+app.post("/api/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = users.find((u) => u.email === email);
+  if (!user) {
+    return res.status(400).json({ message: "Invalid credentials" });
+  }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) {
+    return res.status(400).json({ message: "Invalid Credentials" });
+  }
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "24h" });
+  res.json({ token });
+});
+
 app.delete("/api/jobs/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const index = jobs.findIndex((j) => j.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: "Job not found" });
-  }
+  if (index === -1) return res.status(404).json({ message: "Job not found" });
   jobs.splice(index, 1);
   res.json({ message: "Job deleted" });
 });
 
-app.listen(3001, () => {
-  console.log("Server running on port 3001");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

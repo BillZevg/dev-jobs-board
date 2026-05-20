@@ -9,7 +9,7 @@ function Homepage() {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:3001/api/jobs");
         const data = await response.json();
@@ -20,19 +20,19 @@ function Homepage() {
         setLoading(false);
       }
     };
-    fetchJobs();
+    fetchData();
   }, []);
-  if (loading) return <p>Loading jobs...</p>;
-  if (error) return <p>{error}</p>;
 
   const filteredJobs = jobs.filter((job) => {
     return job.title.toLowerCase().includes(search.toLowerCase());
   });
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div>
       <SearchBar value={search} onChange={setSearch} />
-
       {filteredJobs.map((job) => (
         <JobCard key={job.id} job={job} />
       ))}
