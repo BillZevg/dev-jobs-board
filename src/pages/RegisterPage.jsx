@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -24,22 +24,32 @@ function RegisterPage() {
   };
 
   return (
-    <div>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Register</button>
-      {error && <p>{error}</p>}
-      {success && <p>Account created! Please login.</p>}
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Register</h1>
+        <input
+          className="auth-input"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="auth-input"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="auth-btn" onClick={handleSubmit}>
+          Register
+        </button>
+        <p className="auth-link">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+        {error && <p>{error}</p>}
+        {success && <p>Account created! Please login.</p>}
+      </div>
     </div>
   );
 }

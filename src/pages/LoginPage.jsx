@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -24,21 +24,32 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Login</button>
-      {error && <p>{error}</p>}
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Login</h1>
+
+        <input
+          className="auth-input"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="auth-input"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="auth-btn" onClick={handleSubmit}>
+          Login
+        </button>
+        <p className="auth-link">
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
+        {error && <p>{error}</p>}
+      </div>
     </div>
   );
 }

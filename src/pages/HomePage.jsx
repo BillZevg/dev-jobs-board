@@ -31,11 +31,17 @@ function Homepage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className="home-page">
+      <div className="hero">
+        <h1>Find Your Next Dev Job</h1>
+        <p>{jobs.length} developer jobs across Greece and remote</p>
+      </div>
       <SearchBar value={search} onChange={setSearch} />
-      {filteredJobs.map((job) => (
-        <JobCard key={job.id} job={job} />
-      ))}
+      <div className="jobs-grid">
+        {filteredJobs.map((job) => (
+          <JobCard key={job.id} job={job} />
+        ))}
+      </div>
     </div>
   );
 }

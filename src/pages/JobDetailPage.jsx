@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function JobDetailPage() {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,11 +29,34 @@ function JobDetailPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>{job.title}</h1>
-      <p>
-        {job.company} •{job.location} •{job.type} •{job.salary}
-      </p>
+    <div className="detail-page">
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        ← Back to jobs
+      </button>
+
+      <div className="detail-card">
+        <div className="detail-header">
+          <div className="company-avatar">{job.company[0]}</div>
+          <div>
+            <h1 className="detail-title">{job.title}</h1>
+            <p className="detail-company">{job.company} </p>
+          </div>
+        </div>
+        <div className="detail-meta">
+          <span className="meta-badge">📍 {job.location}</span>
+          <span className="meta-badge">💼 {job.type}</span>
+          <span className="meta-badge">💰 {job.salary}</span>
+        </div>
+        <div className="stack-tags">
+          {job.stack.map((tech) => (
+            <span key={tech} className="tag">
+              {tech}
+            </span>
+          ))}
+        </div>
+        <div className="divider" />
+        <button className="apply-btn">Apply for this role</button>
+      </div>
     </div>
   );
 }

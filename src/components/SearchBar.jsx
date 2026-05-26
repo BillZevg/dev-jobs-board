@@ -1,6 +1,10 @@
 function SearchBar({ value, onChange }) {
   return (
-    <input value={value} onChange={(e) => onChange(e.target.value)}></input>
+    <input
+      className="search-input"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    ></input>
   );
 }
 
