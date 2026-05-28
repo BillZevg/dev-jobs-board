@@ -114,6 +114,9 @@
   margin-bottom: 24px;
   outline: none;
   background: #fff;
+  max-width: 600px;
+  display: block;
+  margin: 0 auto 24px;
 }
 
 .search-input:focus {
@@ -244,6 +247,7 @@
   border-radius: 20px;
   background: #f0f0ea;
   color: #444;
+  gap: 10px;
   border: 1px solid #e0e0d8;
 }
 
@@ -261,6 +265,9 @@
   border-radius: 10px;
   border: none;
   cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
 }
 
 .auth-page {
@@ -311,4 +318,20 @@
   text-align: center;
   margin-top: 16px;
   color: #666;
+}
+
+.delete-btn {
+  background: red;
+  width: auto;
+  color: white;
+  padding: 12px 32px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
 }

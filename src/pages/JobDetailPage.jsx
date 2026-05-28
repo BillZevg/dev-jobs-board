@@ -8,6 +8,21 @@ function JobDetailPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`http://localhost:3001/api/jobs/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      navigate("/");
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,7 +70,14 @@ function JobDetailPage() {
           ))}
         </div>
         <div className="divider" />
-        <button className="apply-btn">Apply for this role</button>
+        <div className="btn-row">
+          <a href="mailto:jobs@example.com" className="apply-btn">
+            Apply for this role
+          </a>
+          <button className="delete-btn" onClick={handleDelete}>
+            Delete Job
+          </button>
+        </div>
       </div>
     </div>
   );

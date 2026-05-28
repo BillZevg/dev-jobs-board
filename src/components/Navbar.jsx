@@ -26,7 +26,9 @@ function Navbar() {
           Browse Jobs
         </Link>
 
-        <button className="nav-btn primary">Post a Job</button>
+        <Link to="/post-job" className="nav-btn primary">
+          Post a Job
+        </Link>
         {token ? (
           <button className="nav-btn" onClick={handleLogout}>
             Logout
